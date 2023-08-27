@@ -25,7 +25,8 @@ export default function Register() {
       return;
     }
 
-    if (doesUserAlreadyExist(email)) {
+    const user = doesUserAlreadyExist(email);
+    if (user) {
       alert("User already exists, Please login");
       return;
     }
@@ -83,12 +84,13 @@ export default function Register() {
   );
 }
 
-// HELPER FUNCTION 
+// HELPER FUNCTION
 
 //TO CHECK IF USER ALREADY EXISTS
-const doesUserAlreadyExist = (email) => {
-  const users = JSON.parse(localStorage.getItem("database")) || [];
-  return users.find((user) => user.email === email);
+export const doesUserAlreadyExist = (email) => {
+  return JSON.parse(localStorage.getItem("database"))?.find(
+    (user) => user.email === email
+  );
 };
 
 // TO STORE USER TO LOCAL STORAGE
@@ -102,5 +104,8 @@ const setUserToLocalDataBase = (data) => {
 export const createCurrentUser = (data) => {
   // SET CURRENT USER WITH TOKEN
   delete data.password;
-  localStorage.setItem("current_user", JSON.stringify({ ...data, token: "123456" }));
+  localStorage.setItem(
+    "current_user",
+    JSON.stringify({ ...data, token: "123456" })
+  );
 };

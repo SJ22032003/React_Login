@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createCurrentUser } from "./register";
+import { createCurrentUser, doesUserAlreadyExist } from "./register";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ export default function Login() {
       alert("Please fill all the fields");
       return;
     }
-    const user = userInDb(email);
+    const user = doesUserAlreadyExist(email);
     if (!user) {
       alert("User does not exist, Please register");
       return;
