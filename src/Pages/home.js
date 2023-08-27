@@ -1,40 +1,36 @@
-import React, { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
-    const [token, setToken] = useState(null);
+  const navigate = useNavigate();
+  const [user, setUserData] = useState({});
 
-    useEffect(() => {
-        const getToken = () => {
-            const savedToken = localStorage.getItem("token");
-            if (savedToken) {
-                setToken(savedToken);
-            }
-            console.log(savedToken);
-        }
-        getToken();
-    }, []);
+  useEffect(() => {
+    const { name, email, token } = (JSON.parse(localStorage.getItem("current_user")) || {});
+    if (!token) {
+      navigate("/login");
+    }
+    setUserData({ name, email });
+  }, []);
 
-    const logOut = () => {
-        localStorage.removeItem("token");
-        window.location.href = '/login';
-    };
+  const logOut = () => {
+    localStorage.removeItem("current_user");
+    navigate("/login");
+  };
 
-    return (
-        <div className='flex w-full h-screen justify-center items-center'>
-            {token !== null ? (
-                <div>
-                    <h1>Welcome to the Home Page</h1>
-                    <button
-                        className='w-1/3 bg-white p-3 my-4 rounded-md border-2 border-black'
-                        onClick={logOut}
-                    >
-                        Logout
-                    </button>
-                </div>
-            ) : (
-                <Navigate to={"/login"} />
-            )}
-        </div>
-    );
+  return (
+    <div className="flex w-full h-screen justify-center items-center">
+      <div>
+        <h1>Welcome to the Home Page</h1>
+        <h2>Hello {user.name}, how are you?</h2>
+        <h2>Your email is {user.email}</h2>
+        <button
+          className="w-1/3 bg-white p-3 my-4 rounded-md border-2 border-black"
+          onClick={logOut}
+        >
+          Logout
+        </button>
+      </div>
+    </div>
+  );
 }
